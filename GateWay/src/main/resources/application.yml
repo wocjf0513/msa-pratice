@@ -1,0 +1,33 @@
+server:
+  port: 8082
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8081/eureka/
+
+  instance:
+    instance-id: gateway
+
+spring:
+  application:
+    name: gateway
+
+
+  cloud:
+    gateway:
+      routes:
+        - id: user
+          uri: lb://user-service # ???? ??, http://localhost:8000/user ? ???? http://localhost:64412 ? ???
+          predicates:
+            - Path=/user/** # ?? gateway ??? /user/**? ???? ?? user-service? ?????? ??
+
+        - id: admin
+          uri: lb://admin-service # ??? ? ??, http://localhost:8000/order ? ???? http://localhost:54412 ? ???
+          predicates:
+            - Path=/admin/** # ?? gateway ??? /order/**? ???? ?? order-service? ?????? ??
+
+  main:
+    web-application-type: reactive
